@@ -10,33 +10,37 @@ function App() {
   const [currentStep, setCurrentStep] = useState(0);
   const [analysisSteps, setAnalysisSteps] = useState([]);
 
-  // Professional analysis steps for government document verification
+  // Professional analysis steps for certificate verification
   const getAnalysisSteps = (file) => {
     const baseSteps = [
-      { id: 1, text: 'Initializing secure connection...', icon: '🔐', duration: 1500 },
-      { id: 2, text: 'Uploading document to secure server', icon: '📤', duration: 2000 },
-      { id: 3, text: 'Extracting document metadata', icon: '📋', duration: 1800 },
-      { id: 4, text: 'Computing SHA-256 cryptographic hash', icon: '🔢', duration: 2200 },
-      { id: 5, text: 'Connecting to government database...', icon: '🏛️', duration: 2500 },
-      { id: 6, text: 'Verifying document against official records', icon: '🔍', duration: 3000 },
-      { id: 7, text: 'Checking blockchain immutable ledger', icon: '⛓️', duration: 3500 },
-      { id: 8, text: 'Analyzing digital signatures', icon: '🛡️', duration: 2800 },
-      { id: 9, text: 'Running ML-based authenticity detection', icon: '🤖', duration: 4000 },
-      { id: 10, text: 'Cross-referencing with fraud database', icon: '🚫', duration: 2300 },
-      { id: 11, text: 'Validating document integrity', icon: '✅', duration: 1500 },
-      { id: 12, text: 'Generating verification report', icon: '📄', duration: 1800 }
+      { id: 1, text: 'Establishing secure SSL connection...', icon: '🔐', duration: 1200 },
+      { id: 2, text: 'Encrypting and uploading certificate', icon: '📤', duration: 1800 },
+      { id: 3, text: 'Extracting certificate metadata', icon: '📋', duration: 1500 },
+      { id: 4, text: 'Performing OCR text recognition', icon: '🔍', duration: 2500 },
+      { id: 5, text: 'Computing digital fingerprint hash', icon: '🔢', duration: 2000 },
+      { id: 6, text: 'Connecting to certificate authorities...', icon: '🏦', duration: 2200 },
+      { id: 7, text: 'Cross-referencing issuing institution', icon: '🏛️', duration: 3000 },
+      { id: 8, text: 'Validating certificate format standards', icon: '📄', duration: 2400 },
+      { id: 9, text: 'Checking blockchain certificate ledger', icon: '⛓️', duration: 3200 },
+      { id: 10, text: 'Running AI forgery detection algorithms', icon: '🤖', duration: 4500 },
+      { id: 11, text: 'Analyzing certificate seal authenticity', icon: '🛡️', duration: 2800 },
+      { id: 12, text: 'Scanning fake certificate database', icon: '🚫', duration: 2600 },
+      { id: 13, text: 'Verifying issuing authority legitimacy', icon: '✅', duration: 2000 },
+      { id: 14, text: 'Generating fraud detection report', icon: '📄', duration: 1800 }
     ];
 
-    // Add file-specific steps
+    // Add certificate-specific steps based on file type
     if (file.type.startsWith('image/')) {
-      baseSteps.splice(8, 0, 
-        { id: 13, text: 'Analyzing EXIF data for tampering signs', icon: '📷', duration: 2500 },
-        { id: 14, text: 'Detecting photographic manipulation', icon: '🔍', duration: 3200 }
+      baseSteps.splice(10, 0, 
+        { id: 15, text: 'Analyzing image EXIF metadata', icon: '📷', duration: 2300 },
+        { id: 16, text: 'Detecting certificate image manipulation', icon: '🎨', duration: 3500 },
+        { id: 17, text: 'Checking for digital watermarks', icon: '💰', duration: 2700 }
       );
     } else if (file.type === 'application/pdf') {
-      baseSteps.splice(8, 0,
-        { id: 15, text: 'Validating PDF structure integrity', icon: '📑', duration: 2100 },
-        { id: 16, text: 'Checking embedded certificates', icon: '🏆', duration: 2400 }
+      baseSteps.splice(10, 0,
+        { id: 18, text: 'Parsing PDF certificate structure', icon: '📑', duration: 2100 },
+        { id: 19, text: 'Validating embedded digital signatures', icon: '✍️', duration: 2800 },
+        { id: 20, text: 'Checking PDF security certificates', icon: '🔒', duration: 2400 }
       );
     }
 
@@ -126,14 +130,15 @@ function App() {
     <div className="App">
       <header className="app-header">
         <div className="header-content">
-          <div className="gov-seal">🏛️</div>
-          <h1>Government Document Verification System</h1>
-          <p className="subtitle">Secure • Blockchain-Verified • AI-Powered</p>
-          <p className="description">Official document authenticity verification using advanced cryptographic and machine learning technologies</p>
+          <div className="gov-seal">📄</div>
+          <h1>Fake Certificate Verification System</h1>
+          <p className="subtitle">Anti-Fraud • AI-Powered • Blockchain-Secured</p>
+          <p className="description">Advanced certificate authenticity verification to detect fraudulent educational, professional, and government certificates</p>
           <div className="security-badges">
-            <span className="badge">🔒 AES-256 Encrypted</span>
-            <span className="badge">⛓️ Blockchain Verified</span>
-            <span className="badge">🏛️ Government Certified</span>
+            <span className="badge">🔒 SSL Encrypted</span>
+            <span className="badge">🤖 AI-Powered Detection</span>
+            <span className="badge">⛓️ Blockchain Verification</span>
+            <span className="badge">🚫 Anti-Fraud Protected</span>
           </div>
         </div>
       </header>
@@ -148,8 +153,8 @@ function App() {
             <div className="analysis-header">
               <div className="analysis-spinner"></div>
               <div className="analysis-info">
-                <h2>Document Verification in Progress</h2>
-                <p>Performing comprehensive security analysis using government-grade verification protocols</p>
+                <h2>Certificate Fraud Detection in Progress</h2>
+                <p>Performing comprehensive authenticity analysis using AI-powered anti-fraud verification protocols</p>
                 <div className="progress-indicator">
                   <div className="progress-bar">
                     <div 
@@ -203,13 +208,13 @@ function App() {
       <footer className="app-footer">
         <div className="footer-content">
           <div className="footer-section">
-            <p>&copy; 2024 Government Document Verification System</p>
-            <p className="disclaimer">Classified: For Official Use Only | This system is monitored</p>
+            <p>&copy; 2024 Fake Certificate Verification System</p>
+            <p className="disclaimer">CONFIDENTIAL: Anti-Fraud System | All activities are logged and monitored</p>
           </div>
           <div className="footer-section">
             <div className="security-info">
               <span>🔒 SSL/TLS Encrypted</span>
-              <span>🏛️ Gov Compliant</span>
+              <span>🚫 Anti-Fraud Certified</span>
               <span>⛓️ Blockchain Secured</span>
             </div>
           </div>
