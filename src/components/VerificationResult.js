@@ -99,6 +99,85 @@ const VerificationResult = ({ file, result, onNewAnalysis }) => {
           </div>
         </div>
 
+        {result.ocrData && (
+          <div className="ocr-section">
+            <h4>📝 Extracted Certificate Information</h4>
+            
+            {result.ocrData.certificateInfo && (
+              <div className="certificate-info">
+                {result.ocrData.certificateInfo.names.length > 0 && (
+                  <div className="info-category">
+                    <h5>👤 Names Found:</h5>
+                    <ul>
+                      {result.ocrData.certificateInfo.names.map((name, index) => (
+                        <li key={index}>{name}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                
+                {result.ocrData.certificateInfo.institutions.length > 0 && (
+                  <div className="info-category">
+                    <h5>🏛️ Institutions:</h5>
+                    <ul>
+                      {result.ocrData.certificateInfo.institutions.map((inst, index) => (
+                        <li key={index}>{inst}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                
+                {result.ocrData.certificateInfo.degrees.length > 0 && (
+                  <div className="info-category">
+                    <h5>🎓 Qualifications:</h5>
+                    <ul>
+                      {result.ocrData.certificateInfo.degrees.map((degree, index) => (
+                        <li key={index}>{degree}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                
+                {result.ocrData.certificateInfo.dates.length > 0 && (
+                  <div className="info-category">
+                    <h5>📅 Dates:</h5>
+                    <ul>
+                      {result.ocrData.certificateInfo.dates.map((date, index) => (
+                        <li key={index}>{date}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                
+                {result.ocrData.certificateInfo.ids.length > 0 && (
+                  <div className="info-category">
+                    <h5>🔢 Certificate IDs:</h5>
+                    <ul>
+                      {result.ocrData.certificateInfo.ids.map((id, index) => (
+                        <li key={index}>{id}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            )}
+            
+            {result.ocrData.text && (
+              <div className="extracted-text">
+                <h5>📄 Full Extracted Text:</h5>
+                <div className="text-content">
+                  {result.ocrData.text}
+                </div>
+                <div className="text-stats">
+                  <span>Confidence: {Math.round(result.ocrData.confidence)}%</span>
+                  <span>Characters: {result.ocrData.text.length}</span>
+                  {result.ocrData.pages && <span>Pages: {result.ocrData.pages}</span>}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
         {result.metadata && (
           <div className="metadata-section">
             <h4>File Metadata</h4>
@@ -133,7 +212,13 @@ const downloadReport = (file, result) => {
     fileSize: file.size,
     fileType: file.type,
     analysisDate: new Date().toISOString(),
-    verificationResult: result
+    verificationResult: {
+      ...result,
+      // Include OCR data in the report
+      extractedText: result.ocrData?.text || null,
+      certificateInfo: result.ocrData?.certificateInfo || null,
+      ocrConfidence: result.ocrData?.confidence || null
+    }
   };
 
   const blob = new Blob([JSON.stringify(report, null, 2)], { 
