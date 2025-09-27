@@ -220,7 +220,7 @@ function App() {
       <footer className="app-footer">
         <div className="footer-content">
           <div className="footer-section">
-            <p>&copy; 2024 Fake Certificate Verification System</p>
+            <p>&copy; 2025 Fake Certificate Verification System</p>
             <p className="disclaimer">CONFIDENTIAL: Anti-Fraud System | All activities are logged and monitored</p>
           </div>
           <div className="footer-section">
