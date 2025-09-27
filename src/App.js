@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './App.css';
 import FileUpload from './components/FileUpload';
 import VerificationResult from './components/VerificationResult';
-import ocrService from './utils/ocrService';
 
 function App() {
   const [currentFile, setCurrentFile] = useState(null);
@@ -10,9 +9,6 @@ function App() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [analysisSteps, setAnalysisSteps] = useState([]);
-  const [ocrProgress, setOcrProgress] = useState(0);
-  const [ocrResults, setOcrResults] = useState(null);
-  const [isOcrProcessing, setIsOcrProcessing] = useState(false);
 
   // Professional analysis steps for certificate verification
   const getAnalysisSteps = (file) => {
@@ -20,9 +16,8 @@ function App() {
       { id: 1, text: 'Establishing secure SSL connection...', icon: '🔐', duration: 1200 },
       { id: 2, text: 'Encrypting and uploading certificate', icon: '📤', duration: 1800 },
       { id: 3, text: 'Extracting certificate metadata', icon: '📋', duration: 1500 },
-      { id: 4, text: 'Initializing OCR text recognition engine', icon: '🔍', duration: 2000 },
-      { id: 5, text: 'Performing advanced OCR text extraction', icon: '📝', duration: 0, isOcr: true }, // Special OCR step
-      { id: 6, text: 'Parsing extracted certificate information', icon: '🧠', duration: 1500 },
+      { id: 4, text: 'Analyzing certificate structure and format', icon: '🔍', duration: 2000 },
+      { id: 5, text: 'Parsing certificate information', icon: '🧠', duration: 1500 },
       { id: 7, text: 'Computing digital fingerprint hash', icon: '🔢', duration: 2000 },
       { id: 8, text: 'Connecting to certificate authorities...', icon: '🏦', duration: 2200 },
       { id: 9, text: 'Cross-referencing issuing institution', icon: '🏛️', duration: 3000 },
@@ -53,13 +48,11 @@ function App() {
     return baseSteps;
   };
 
-  // Real analysis function with OCR integration
+  // Real analysis function
   const analyzeFile = async (file) => {
     setIsAnalyzing(true);
     setCurrentFile(file);
     setCurrentStep(0);
-    setOcrResults(null);
-    setOcrProgress(0);
     
     const steps = getAnalysisSteps(file);
     setAnalysisSteps(steps);
@@ -68,42 +61,24 @@ function App() {
       // Simulate progressive analysis steps
       for (let i = 0; i < steps.length; i++) {
         setCurrentStep(i);
-        
-        // Handle OCR step specially
-        if (steps[i].isOcr) {
-          setIsOcrProcessing(true);
-          try {
-            const ocrResult = await ocrService.extractText(file, (progress) => {
-              setOcrProgress(progress);
-            });
-            setOcrResults(ocrResult);
-            console.log('OCR Results:', ocrResult);
-          } catch (error) {
-            console.error('OCR Error:', error);
-            // Continue with analysis even if OCR fails
-          } finally {
-            setIsOcrProcessing(false);
-          }
-        } else {
-          await new Promise(resolve => setTimeout(resolve, steps[i].duration));
-        }
+        await new Promise(resolve => setTimeout(resolve, steps[i].duration));
       }
       
-      // Generate final result with OCR data
-      const mockResult = generateMockResult(file, ocrResults);
+      // Generate final result
+      const mockResult = generateMockResult(file);
       setVerificationResult(mockResult);
     } catch (error) {
       console.error('Analysis error:', error);
       // Generate result even if there's an error
-      const mockResult = generateMockResult(file, null);
+      const mockResult = generateMockResult(file);
       setVerificationResult(mockResult);
     } finally {
       setIsAnalyzing(false);
     }
   };
 
-  // Generate mock verification results with OCR data
-  const generateMockResult = (file, ocrData = null) => {
+  // Generate mock verification results
+  const generateMockResult = (file) => {
     const fileName = file.name.toLowerCase();
     
     // Simple mock logic for demonstration
@@ -138,7 +113,7 @@ function App() {
       ];
     }
 
-    // Enhanced metadata with OCR results
+    // File metadata
     const metadata = {
       'File Size': `${(file.size / 1024 / 1024).toFixed(2)} MB`,
       'File Type': file.type,
@@ -146,25 +121,12 @@ function App() {
       'Analysis Time': new Date().toLocaleString(),
       'Algorithm Version': '2.1.3'
     };
-    
-    // Add OCR metadata if available
-    if (ocrData) {
-      metadata['Text Extraction'] = 'Success';
-      metadata['OCR Confidence'] = `${Math.round(ocrData.confidence)}%`;
-      metadata['Text Length'] = `${ocrData.text.length} characters`;
-      if (ocrData.pages) {
-        metadata['PDF Pages'] = ocrData.pages;
-      }
-    } else {
-      metadata['Text Extraction'] = 'Failed';
-    }
 
     return {
       status,
       confidence,
       details,
-      metadata,
-      ocrData: ocrData || null
+      metadata
     };
   };
 
@@ -174,17 +136,7 @@ function App() {
     setIsAnalyzing(false);
     setCurrentStep(0);
     setAnalysisSteps([]);
-    setOcrProgress(0);
-    setOcrResults(null);
-    setIsOcrProcessing(false);
   };
-  
-  // Cleanup OCR service on unmount
-  useEffect(() => {
-    return () => {
-      ocrService.terminate();
-    };
-  }, []);
 
   return (
     <div className="App">
@@ -239,18 +191,7 @@ function App() {
                   <div className="step-icon">{step.icon}</div>
                   <div className="step-content">
                     <span className="step-text">{step.text}</span>
-                    {index === currentStep && step.isOcr && isOcrProcessing && (
-                      <div className="ocr-progress">
-                        <div className="ocr-progress-bar">
-                          <div 
-                            className="ocr-progress-fill" 
-                            style={{ width: `${ocrProgress}%` }}
-                          ></div>
-                        </div>
-                        <span className="ocr-progress-text">{ocrProgress}% complete</span>
-                      </div>
-                    )}
-                    {index === currentStep && !step.isOcr && (
+                    {index === currentStep && (
                       <div className="step-loader">
                         <div className="loader-dots">
                           <span></span><span></span><span></span>
